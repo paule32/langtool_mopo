@@ -1,0 +1,340 @@
+object Form1: TForm1
+  Left = 50
+  Height = 417
+  Top = 90
+  Width = 614
+  Caption = 'langtool by (c) 2022 by paule32'
+  ClientHeight = 392
+  ClientWidth = 614
+  Color = clSilver
+  DesignTimePPI = 120
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '2.0.12.0'
+  object Button1: TButton
+    Left = 477
+    Height = 36
+    Top = 311
+    Width = 119
+    Anchors = [akRight, akBottom]
+    Caption = 'Create .mo'
+    Font.Style = [fsBold]
+    OnClick = Button1Click
+    ParentFont = False
+    TabOrder = 0
+  end
+  object DBNavigator1: TDBNavigator
+    Left = 0
+    Height = 28
+    Top = 0
+    Width = 301
+    BevelOuter = bvNone
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.EnlargeVertical = crsScaleChilds
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 100
+    ClientHeight = 28
+    ClientWidth = 301
+    DataSource = DataSource1
+    Options = []
+    TabOrder = 1
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 29
+    Top = 363
+    Width = 614
+    Color = clCream
+    Panels = <>
+    ParentColor = False
+  end
+  object Edit1: TEdit
+    Left = 304
+    Height = 28
+    Top = 0
+    Width = 252
+    Color = clInfoBk
+    TabOrder = 3
+    Text = 'Edit1'
+  end
+  object SpeedButton1: TSpeedButton
+    Left = 568
+    Height = 28
+    Top = 0
+    Width = 29
+    Caption = '...'
+    Color = clSilver
+    OnClick = SpeedButton1Click
+  end
+  object DBGrid1: TDBGrid
+    Left = 2
+    Height = 184
+    Top = 32
+    Width = 596
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Color = clInfoBk
+    Columns = <    
+      item
+        Color = clWhite
+        Font.Color = clBlack
+        Title.Caption = 'MSGID'
+        Width = 100
+        FieldName = 'MSGID'
+      end    
+      item
+        Color = clWhite
+        Font.Color = clBlack
+        Title.Caption = 'ENG'
+        Width = 230
+        FieldName = 'ENG'
+      end    
+      item
+        Color = clWhite
+        Font.Color = clBlack
+        Title.Caption = 'DEU'
+        Width = 230
+        FieldName = 'DEU'
+      end    
+      item
+        Color = clWhite
+        Font.Color = clBlack
+        Title.Caption = 'RUS'
+        Width = 230
+        FieldName = 'RUS'
+      end    
+      item
+        Color = clWhite
+        Font.Color = clBlack
+        Title.Caption = 'POL'
+        Width = 230
+        FieldName = 'POL'
+      end>
+    DataSource = DataSource1
+    DefaultDrawing = False
+    FixedColor = clGradientActiveCaption
+    FixedHotColor = clGradientInactiveCaption
+    Flat = True
+    Font.Color = clBlack
+    ParentFont = False
+    TabOrder = 4
+    TitleFont.Color = clBlack
+    TitleFont.Style = [fsBold]
+    OnColEnter = DBGrid1ColEnter
+    OnColExit = DBGrid1ColExit
+    OnEnter = DBGrid1Enter
+    OnKeyDown = DBGrid1KeyDown
+    OnKeyPress = DBGrid1KeyPress
+  end
+  object CheckGroup1: TCheckGroup
+    Left = 8
+    Height = 110
+    Top = 237
+    Width = 207
+    Anchors = [akLeft, akBottom]
+    AutoFill = True
+    Caption = ' Output: '
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.VerticalSpacing = 10
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 203
+    Color = clScrollBar
+    Font.Color = clMenuHighlight
+    Font.Style = [fsBold]
+    Items.Strings = (
+      'ENG - EN'
+      'DEU - DE'
+      'RUS - RU'
+      'POL - PO'
+    )
+    ParentFont = False
+    ParentColor = False
+    TabOrder = 5
+    Data = {
+      0400000002020202
+    }
+  end
+  object Edit2: TEdit
+    Left = 232
+    Height = 28
+    Top = 264
+    Width = 208
+    Color = clInfoBk
+    TabOrder = 6
+    Text = 'Edit2'
+  end
+  object Edit3: TEdit
+    Left = 232
+    Height = 28
+    Top = 319
+    Width = 208
+    Color = clInfoBk
+    TabOrder = 7
+    Text = 'Edit3'
+  end
+  object Label1: TLabel
+    Left = 229
+    Height = 20
+    Top = 239
+    Width = 89
+    Caption = '.PO - Output :'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 232
+    Height = 20
+    Top = 296
+    Width = 94
+    Caption = '.MO - Output :'
+    ParentColor = False
+  end
+  object Button2: TButton
+    Left = 478
+    Height = 36
+    Top = 256
+    Width = 119
+    Anchors = [akRight, akBottom]
+    Caption = 'Create .po'
+    Font.Style = [fsBold]
+    OnClick = Button1Click
+    ParentFont = False
+    TabOrder = 8
+  end
+  object MainMenu1: TMainMenu
+    Left = 192
+    Top = 88
+    object MenuItem1: TMenuItem
+      Caption = 'File'
+      OnClick = MenuItem1Click
+      object MenuItem3: TMenuItem
+        Caption = 'Open JSON'
+        OnClick = MenuItem3Click
+      end
+      object MenuItem4: TMenuItem
+        Caption = 'Save JSON'
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem2: TMenuItem
+        Caption = 'Exit'
+        OnClick = MenuItem2Click
+      end
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = Dbf1
+    Left = 32
+    Top = 88
+  end
+  object Dbf1: TDbf
+    DateTimeHandling = dtDateTime
+    Exclusive = True
+    FilePath = 'G:\Projekte\docma\test\'
+    IndexDefs = <>
+    ShowDeleted = True
+    TableName = 'podata.dbf'
+    TableLevel = 7
+    FilterOptions = []
+    Left = 104
+    Top = 88
+    object Dbf1RECID: TAutoIncField
+      FieldKind = fkData
+      FieldName = 'RECID'
+      Index = 0
+      LookupCache = False
+      LookupDataSet = Dbf1
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+    end
+    object Dbf1MSGID: TWideStringField
+      DisplayWidth = 30
+      FieldKind = fkData
+      FieldName = 'MSGID'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 250
+    end
+    object Dbf1ENG: TWideStringField
+      FieldKind = fkData
+      FieldName = 'ENG'
+      Index = 2
+      LookupCache = False
+      LookupDataSet = Dbf1
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 250
+    end
+    object Dbf1DEU: TWideStringField
+      FieldKind = fkData
+      FieldName = 'DEU'
+      Index = 3
+      LookupCache = False
+      LookupDataSet = Dbf1
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 250
+    end
+    object Dbf1RUS: TWideStringField
+      FieldKind = fkData
+      FieldName = 'RUS'
+      Index = 4
+      LookupCache = False
+      LookupDataSet = Dbf1
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 250
+    end
+    object Dbf1POL: TWideStringField
+      FieldKind = fkData
+      FieldName = 'POL'
+      Index = 5
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 250
+    end
+  end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    Left = 464
+    Top = 88
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.*.jsr'
+    Left = 288
+    Top = 88
+  end
+  object Process1: TProcess
+    Active = False
+    Options = []
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoNone
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    Left = 152
+    Top = 280
+  end
+end
