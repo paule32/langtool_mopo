@@ -16,14 +16,16 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Interfaces, // this includes the LCL widgetset
-  Forms, dbflaz, lang1
-  { you can add units after this };
-
-{$R *.res}
+  Interfaces, gettext, DOS, Dialogs,
+  Forms, dbflaz, lang1;
 
 begin
-  RequireDerivedFormResource:=True;
+  // locale: LANG='de_DE.UTF-8' ./app
+  translateResourceStrings('.\application-de.mo'); // +
+//  Copy(GetEnvironmentVariable('LANG'),1,2) + '.mo');
+
+  RequireDerivedFormResource := True;
+
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
