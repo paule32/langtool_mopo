@@ -1,22 +1,23 @@
 object Form1: TForm1
   Left = 89
-  Height = 626
+  Height = 629
   Top = 114
-  Width = 603
+  Width = 606
   Caption = 'langtool by (c) 2022 by paule32'
-  ClientHeight = 601
-  ClientWidth = 603
+  ClientHeight = 604
+  ClientWidth = 606
   Color = clSilver
   DesignTimePPI = 120
   Menu = MainMenu1
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   LCLVersion = '2.2.2.0'
   object StatusBar1: TStatusBar
     Left = 0
     Height = 29
-    Top = 572
-    Width = 603
+    Top = 575
+    Width = 606
     Color = clCream
     Panels = <    
       item
@@ -58,9 +59,12 @@ object Form1: TForm1
     object Edit1: TEdit
       Left = 240
       Height = 28
+      Hint = 'Working Directory (user path)'
       Top = 8
       Width = 284
       Color = clInfoBk
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 2
       Text = 'Edit1'
     end
@@ -85,9 +89,12 @@ object Form1: TForm1
     object Edit5: TEdit
       Left = 240
       Height = 28
+      Hint = 'current working data base file'
       Top = 48
-      Width = 284
+      Width = 176
       Color = clInfoBk
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 4
       Text = 'Edit5'
     end
@@ -143,6 +150,15 @@ object Form1: TForm1
         210
         210
       )
+    end
+    object BitBtn4: TBitBtn
+      Left = 440
+      Height = 30
+      Top = 46
+      Width = 84
+      Caption = 'Back-Up'
+      OnClick = BitBtn4Click
+      TabOrder = 6
     end
   end
   object Panel3: TPanel
@@ -201,10 +217,13 @@ object Form1: TForm1
     object Edit2: TEdit
       Left = 224
       Height = 28
+      Hint = '.mo output file (excluding lang. initials (-en, -de, ...)'
       Top = 43
       Width = 208
       Anchors = [akLeft, akBottom]
       Color = clInfoBk
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 3
       Text = 'Edit2'
     end
@@ -220,10 +239,13 @@ object Form1: TForm1
     object Edit3: TEdit
       Left = 224
       Height = 28
+      Hint = '.po output file (excluding lang. initials (-en, -de, ...)'
       Top = 104
       Width = 208
       Anchors = [akLeft, akBottom]
       Color = clInfoBk
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 4
       Text = 'Edit3'
     end
@@ -442,9 +464,12 @@ object Form1: TForm1
     object Edit13: TEdit
       Left = 240
       Height = 28
+      Hint = 'Tool Directory (msgfmt.exe)'
       Top = 11
       Width = 284
       Color = clInfoBk
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 2
       Text = 'Edit13'
     end
@@ -464,11 +489,12 @@ object Form1: TForm1
     object MenuItem1: TMenuItem
       Caption = 'File'
       object MenuItem3: TMenuItem
-        Caption = 'Open JSON'
+        Caption = 'Open DataBase file'
         OnClick = MenuItem3Click
       end
       object MenuItem4: TMenuItem
-        Caption = 'Save JSON'
+        Caption = 'Save DataBase file'
+        OnClick = MenuItem4Click
       end
       object N1: TMenuItem
         Caption = '-'

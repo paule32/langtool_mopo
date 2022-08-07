@@ -19,6 +19,8 @@ uses
   Interfaces, gettext, DOS, Dialogs,
   Forms, dbflaz, lang1;
 
+{$R *.res}
+
 begin
   // locale: LANG='de_DE.UTF-8' ./app
   translateResourceStrings('.\application-de.mo'); // +
@@ -26,7 +28,6 @@ begin
 
   RequireDerivedFormResource := True;
 
-  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;

@@ -9,13 +9,15 @@
       </Flags>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="langtool"/>
-      <Scaled Value="True"/>
+      <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
+        <AnsiUTF8 Value="True"/>
+        <TextName Value="kallup non-profit"/>
+        <TextDesc Value="Locales Tool"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -59,6 +61,11 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="2"/>
+      </Optimizations>
+    </CodeGeneration>
     <Linking>
       <Options>
         <Win32>

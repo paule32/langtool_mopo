@@ -25,6 +25,7 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -72,15 +73,18 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Edit4Change(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
@@ -107,7 +111,7 @@ var
 
 implementation
 
-{$R *.lfm}
+{$R lang1.lfm}
 
 // ----------------------------------------------------------------------------
 // platform specification stuff ...
@@ -159,7 +163,6 @@ var
   f_mdbf: TDbf;
   t_row : Integer;
 begin
-  ShowMessage(RCS_Test);
   try
     f_path := ExtractFilePath(Application.ExeName);
     f_name := ExtractFileName(Application.ExeName);
@@ -186,7 +189,7 @@ begin
       edit11.Text := iniFile.ReadString('project','langteam'   , '');
       edit12.Text := iniFile.ReadString('project','contenttype', '');
 
-      edit13.Text := iniFile.ReadString('utils','msgfmt','msgfmt.exe');
+      edit13.Text := iniFile.ReadString('utils','msgfmt','');
 
       dbf1.Close;
       dbf1.FilePath     := edit1.Text;
@@ -227,6 +230,9 @@ begin
       // -------------------------------
       dbf1.Open;
       dbf1.First;
+
+      dbf1.Edit;
+      dbf1.PackTable;
 
       while not dbf1.EOF do
       begin
@@ -336,6 +342,7 @@ var
   ox1, ox2 : String;
   moproc   : TProcess;
 begin
+  BitBtn3Click(Sender);
   for idx := 0 to Length(poLocales)-1 do
   begin
     if CheckGroup1.Checked[idx] then
@@ -397,7 +404,10 @@ begin
 
       try
         moproc := TProcess.Create(nil);
-        moproc.Executable  := edit13.Text;
+
+        {$IFDEF MSWINDOWS} moproc.Executable  := edit13.Text + 'msgfmt.exe'; {$ENDIF}
+        {$IFDEF LINUX}     moproc.Executable  := edit13.Text + 'msgfmt';     {$ENDIF}
+
         moproc.Parameters.Add('-o');
         moproc.Parameters.Add(ox1 );
         moproc.Parameters.Add(ox2 );
@@ -482,6 +492,12 @@ begin
   Button3.Enabled := true;
 end;
 
+procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  BitBtn3Click(Sender);
+  CloseAction := caFree;
+end;
+
 // ----------------------------------------------------------------------------
 // @brief  add button - add a new row (record) to the end of the StringGrid1.
 //         The data will be saved after the end of the application, or on
@@ -509,6 +525,14 @@ procedure TForm1.BitBtn2Click(Sender: TObject);
 var
   i: integer;
 begin
+  if not dbf1.Active then
+  dbf1.Open;
+  dbf1.Edit;
+  dbf1.EmptyTable;
+
+  dbf1.Edit;
+  dbf1.PackTable;
+
   with Form1.StringGrid1 do
   begin
     if RowCount = 1 then
@@ -517,6 +541,17 @@ begin
     for i := Row to RowCount - 2 do
     Rows[i].Assign(Rows[i + 1]);
     RowCount := RowCount - 1;
+  end;
+
+  for i := 1 to StringGrid1.RowCount - 1 do
+  begin
+    dbf1.Insert; dbf1.Edit;
+    dbf1.FieldByName('MSGID').AsString := stringGrid1.Cells[0, i];
+    dbf1.FieldByName('ENG'  ).AsString := stringGrid1.Cells[1, i];
+    dbf1.FieldByName('DEU'  ).AsString := stringGrid1.Cells[2, i];
+    dbf1.FieldByName('RUS'  ).AsString := stringGrid1.Cells[3, i];
+    dbf1.FieldByName('POL'  ).AsString := stringGrid1.Cells[4, i];
+    dbf1.Post;
   end;
 end;
 
@@ -547,7 +582,6 @@ begin
     begin
       for t_row := stringGrid1.RowCount - 1 downto 1 do
       begin
-        showmessage('111');
         ProgressBar1.Position :=
         ProgressBar1.Max - t_row;
         Edit; Delete;
@@ -582,6 +616,63 @@ begin
     end;
 end;
 
+procedure TForm1.BitBtn4Click(Sender: TObject);
+var
+  saveDialog : TSaveDialog;
+  saveCommand: TProcess;
+  s1, s2     : String;
+begin
+  saveDialog := TSaveDialog.Create(Application);
+  try
+    saveDialog.InitialDir := f_path;
+    if not saveDialog.Execute then
+    begin
+      ShowMessage('Error occur');
+      dbf1.Close;
+      exit;
+    end;
+
+    if (Length(Trim(edit5.Text)) < 1) then
+    begin
+      ShowMessage('no database file available.');
+      exit;
+    end;
+    dbf1.Close;
+
+    if not (String(edit5.Text).Contains('.dbf')) then begin
+      ShowMessage('no valid .dbf file');
+      exit;
+    end;
+    if not (String(saveDialog.FileName).Contains('.dbf')) then begin
+      ShowMessage('no valid .dbf file for backup.');
+      exit;
+    end;
+
+    saveCommand := TProcess.Create(nil);
+    {$IFDEF MSWINDOWS} saveCommand.Executable  := AppendPathDelim(edit13.Text) + 'cp.exe'; {$ENDIF}
+    {$IFDEF LINUX}     SaveCommand.Executable  := AppendPathDelim(edit13.Text) + 'cp';     {$ENDIF}
+
+         saveCommand.Options :=
+         saveCommand.Options + [poWaitOnExit];
+    with saveCommand do
+    begin
+      s1 := saveDialog.FileName;
+      s2 := ChangeFileExt(edit5.Text,'.dbf');
+      with Parameters do begin Clear; Add(s2); Add(s1); end;
+      Execute;
+
+      s1 := ChangeFileExt(edit5.Text,'.mdx');
+      s2 := ChangeFileExt(saveDialog.FileName,'.mdx');
+      showMessage(s2);
+      with Parameters do begin Clear; Add(s1); Add(s2); end;
+      Execute;
+    end;
+    saveCommand.Free;
+  finally
+    saveDialog.Free;
+  end;
+end;
+
 // ----------------------------------------------------------------------------
 // @brief  File->Open JSON - opens the .jsr file that was produce by fpc.
 //         This file can be found in the binary directory: .\lib\i386-win32
@@ -600,23 +691,39 @@ begin
   openDialog := TOpenDialog.Create(Application);
   try
     openDialog.InitialDir := f_path;
+    openDialog.Filter := 'dBase File (*.dbf)|*.DBF';
     if not openDialog.Execute then
     begin
       ShowMessage('Error occur');
       dbf1.Close;
       exit;
     end;
-    jsrFile := openDialog.FileName;
-    if ExtractFileExt(jsrFile) <> 'jsr' then
+
+    if LowerCase(ExtractFileExt(openDialog.FileName)) <> '.dbf' then
     begin
-      ShowMessage('.jsr file seems not okay.');
+      ShowMessage('.dbf file seems not okay.');
       dbf1.Close;
       exit;
     end;
-    dbf1.Open;
+
+    if dbf1.Active then
+    begin
+      dbf1.Edit;
+      dbf1.Post; dbf1.Close;
+    end;
+    dbf1.TableName := openDialog.FileName;
+    dbf1.Open ;
+    dbf1.First;
+
+    edit5.Text := openDialog.FileName;
   finally
     openDialog.Free;
   end;
+end;
+
+procedure TForm1.MenuItem4Click(Sender: TObject);
+begin
+  BitBtn4Click(Sender);
 end;
 
 // ----------------------------------------------------------------------------
@@ -697,25 +804,24 @@ begin
 end;
 
 procedure TForm1.SpeedButton3Click(Sender: TObject);
-var openDialog: TOpenDialog;
+var
+  openDialog : TSelectDirectoryDialog;
+  s1         : String;
 begin
-  openDialog := TOpenDialog.Create(Application);
+  openDialog := TSelectDirectoryDialog.Create(Application);
   try
     openDialog.InitialDir := AppendPathDelim(Application.ExeName);
-    openDialog.Filter := '"All files|*.*|Executables|*.exe|msgfmt.exe|msgfmt.exe"';
-    openDialog.DefaultExt := '.exe';
-    if openDialog.Execute = false then
+    if openDialog.Execute  = false then
     begin
       ShowMessage('open error occur');
       exit;
     end;
-    if not openDialog.FileName.Contains(LowerCase('msgfmt.exe'))
-    or not FileExists(openDialog.FileName) then
-    begin
-      ShowMessage('open failed error.');
-      exit;
+    {$IFDEF MSWINDOWS} s1 := 'msgfmt.exe'; {$ENDIF}
+    {$IFDEF LINUX}     s1 := 'msgfmt';     {$ENDIF}
+    if not (FileExists(AppendPathDelim(openDialog.FileName) + LowerCase(s1))) then begin
+      ShowMessage(s1 + ': not found');
     end;
-    edit13.Text := openDialog.FileName;
+    edit13.Text := ExtractFilePath(AppendPathDelim(openDialog.FileName) + LowerCase(s1));
   finally
     openDialog.Free;
   end;
